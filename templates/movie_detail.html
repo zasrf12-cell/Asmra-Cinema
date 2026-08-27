@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - سينما أسمرة الإمبراطورية</title>
+    <style>
+        body {
+            background-color: #050000;
+            color: #ffffff;
+            font-family: Tahoma, sans-serif;
+            margin: 0;
+            padding: 8px;
+            text-align: center;
+        }
+        /* شريط الأقسام العلوي */
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .badge-btn {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .badge-green { background: #00cc44; color: #000; font-weight: bold; border: none; }
+        .badge-fire { background: #ff3300; color: #fff; border: none; }
+        .badge-space { background: #00bcd4; color: #000; border: none; }
+
+        .container {
+            max-width: 420px;
+            margin: auto;
+            background: #0a0a0a;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid #222;
+        }
+
+        .poster-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .movie-poster {
+            width: 100%;
+            border-radius: 10px;
+            max-height: 320px;
+            object-fit: cover;
+        }
+        .poster-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffcc00;
+            color: #000;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin: 8px 0;
+            font-size: 24px;
+        }
+
+        .ad-box {
+            border: 1px dashed #ffcc0066;
+            background: #1a1600;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .tags-group {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .genre-tag {
+            background: #2a0808;
+            color: #ff4757;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid #ff004f55;
+        }
+        .universe-tag {
+            background: #221800;
+            color: #ffcc00;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid #ffcc0055;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #bbbbbb;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .space-box {
+            border: 1px solid #ffcc0044;
+            background: #121000;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-align: right;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .ai-box {
+            border: 1px solid #00ff6644;
+            background: #001105;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .ai-box input {
+            width: 70%;
+            padding: 8px;
+            background: #000;
+            border: 1px solid #00ff6666;
+            color: #fff;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 11px;
+        }
+        .ai-box button {
+            width: 26%;
+            padding: 8px;
+            background: #00ff66;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .main-watch-btn {
+            display: block;
+            background: #ff004f;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .sub-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .sub-btn {
+            flex: 1;
+            background: #121212;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            text-decoration: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .share-btn {
+            display: block;
+            background: #0077ff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .hud-btn {
+            display: block;
+            background: #00ff33;
+            color: #000;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: right;
+            font-size: 13px;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .rec-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .rec-card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .rec-card img {
+            width: 70px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 5px;
+        }
+        .rec-card a {
+            display: block;
+            background: #ff004f;
+            color: #fff;
+            font-size: 11px;
+            padding: 6px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .comment-box {
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: right;
+        }
+        .comment-box textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            resize: none;
+            height: 60px;
+            font-size: 11px;
+        }
+        .comment-box button {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .bottom-status {
+            margin-top: 15px;
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            color: #ffcc00;
+            display: flex;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+<div class="top-nav">
+    <a href="{{ url_for('index') }}" class="badge-btn">← الرئيسية</a>
+    <a href="{{ url_for('index') }}?search=سيبراني" class="badge-btn">💻 فليكس سيبراني</a>
+    <a href="{{ url_for('index') }}?search=ناسا" class="badge-btn badge-space">🌌 ناسا الفسح</a>
+    <a href="{{ url_for('index') }}?search=حَراري" class="badge-btn badge-fire">🔥 نبض حراري</a>
+    <a href="{{ url_for('index') }}?search=زمن" class="badge-btn">⏳ السفر بالزمن</a>
+    <a href="{{ url_for('index') }}?search=تريند" class="badge-btn badge-fire">🔥 تريند اليوم</a>
+    <a href="{{ url_for('index') }}?search=هولو" class="badge-btn badge-space">🛸 هولو جرام</a>
+    <a href="{{ url_for('index') }}?search=ألوان" class="badge-btn badge-green">⚡ اختراق ألوان</a>
+</div>
+
+
+<script>
+    function openSection(sectionName) {
+        let adBox = document.querySelector('.ad-box');
+        if (adBox) {
+            adBox.innerHTML = '⚡ أنت الآن تصفح قسم: (' + sectionName + ') بنجاح يا أبو سمرة!';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+</script>
+
+
+
+<script>
+    function openSection(sectionName) {
+        let adBox = document.querySelector('.ad-box');
+        if (adBox) {
+            adBox.innerHTML = '⚡ تم فتح تردد القسم: (' + sectionName + ') بنجاح يا أبو سمرة!';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+</script>
+
+
+
+    <div class="container">
+        <div class="poster-wrapper">
+            <div class="poster-badge">⭐ إمبراطورية Cinema Asmra</div>
+            <img src="{{ movie.image_url }}" alt="{{ movie.title }}" class="movie-poster">
+        </div>
+
+        <h1>{{ movie.title }}</h1>
+    <!-- مشغل الفيديو العام لأي فيلم مع الترجمة واسمك -->
+        <!-- مشغل سينما أسمرة الآمن لتجاوز الحظر -->
+        <div style="position: relative; margin-bottom: 12px; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #333;">
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}" style="width: 100%; max-height: 300px; object-fit: cover; filter: brightness(0.5);">
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.4);">
+                <a href="{{ movie.embed_url }}" target="_blank" style="background: #ff004f; color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 13px; box-shadow: 0 0 10px rgba(255,0,79,0.5);">
+                    🚀 تشغيل الفيلم (تجاوز الحظر)
+                </a>
+            </div>
+        </div>
+
+
+        <!-- اسمك فوق الشريط -->
+        <div style="position: absolute; bottom: 45px; right: 15px; color: rgba(255, 255, 255, 0.8); font-size: 14px; font-weight: bold; z-index: 10; pointer-events: none; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">
+            Asmra Cinema - أبو سمرة
+        </div>
+    </div>
+
+        <div class="ad-box">
+            📢 [مساحة إعلانية إمبراطورية مخصصة]
+        </div>
+
+        <div class="tags-group">
+            <span class="genre-tag">{{ movie.genre }}</span>
+            <span class="universe-tag">8K UNIVERSE</span>
+        </div>
+
+        <div class="description">
+            {{ movie.description }}
+        </div>
+
+        <!-- محطة السهرة الكونية -->
+        <div class="space-box" onclick="spinWheel()">
+            🌌 محطة السهرة الكونية!<br>
+            <span style="font-size: 11px; color: #ffcc00;" id="wheel-text">🎲 لف العجلة واكسب نقاط</span>
+        </div>
+
+        <!-- ذكاء سينما Asmra الخارق -->
+        <div class="ai-box">
+            <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">🤖 ذكاء سينما Asmra الخارق:</div>
+            <p style="font-size: 10px; color: #aaa; margin: 0 0 6px 0;">أهلاً بك يا أبو سمرة في فئة الفن! اسألني عن الأفلام أو اطلب إيه سينمائي وهرد عليك فوراً!</p>
+            <form action="/ai_chat" method="POST">
+                <input type="text" name="query" placeholder="اكتب سؤالك هنا يا فنان...">
+                <button type="submit">إرسال</button>
+            </form>
+        </div>
+
+        <!-- زر المشاهدة الرئيسي -->
+        <a href="{{ embed_url }}" class="main-watch-btn" target="_blank">▶ مشاهدة الفيلم بجودة إمبراطورية</a>
+
+        <!-- الأزرار الفرعية الفعالة -->
+        <div class="sub-btn-group">
+            <button type="button" class="sub-btn" onclick="addToList()">⭐ أضف لقائمة السهرة</button>
+            <button type="button" class="sub-btn" onclick="openParty()">🎬 غرفة سهرة إمبراطورية</button>
+        </div>
+
+        <!-- زر المشاركة الفعال -->
+        <button type="button" class="share-btn" onclick="shareMovie()">🔗 مشاركة الفيلم مع الأصدقاء</button>
+
+        <!-- تفعيل واجهة الجيل القادم -->
+        <button type="button" class="hud-btn" onclick="toggleHud()">⚡ تفعيل واجهة الجيل القادم (Cyber HUD)</button>
+
+        <!-- أفلام مشابهة -->
+        <div class="section-title">🎬 أفلام مشابهة تعجبك:</div>
+        <div class="rec-container">
+            {% for rec in recommended_movies %}
+                <div class="rec-card">
+                    <img src="{{ rec.image_url }}" alt="{{ rec.title }}">
+                    <div style="font-size: 12px; font-weight: bold; color: #fff;">{{ rec.title }}</div>
+                    <a href="{{ url_for('movie_detail', movie_id=rec.id) }}">شاهد الفيلم</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- آراء الإمبراطورية -->
+        <div class="section-title">💬 آراء الإمبراطورية:</div>
+        <div class="comment-box">
+            <form action="/add_comment/{{ movie.id }}" method="POST">
+                <textarea name="content" placeholder="اكتب رأيك يا إمبراطور..."></textarea>
+                <button type="submit">إرسال التعليق</button>
+            </form>
+
+            <ul style="padding-right: 15px; margin: 8px 0 0 0; font-size: 11px; color: #ccc; text-align: right;">
+                {% for comment in comments %}
+                    <li style="margin-bottom: 4px;">{{ comment.content }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="bottom-status">
+            <span>👑 الرتبة: إمبراطور السينما</span>
+            <span id="points-display">⭐ النقاط: 350</span>
+        </div>
+    </div>
+
+    <!-- كود JavaScript لتشغيل كل زرار في مكانه بدون إعادة توجيه -->
+    <script>
+        let userPoints = 350;
+
+        function filterSection(sectionName) {
+            // تنفيذ مهام الأزرار العلوية بدون الخروج من الصفحة الحالية
+            let adBox = document.querySelector('.ad-box');
+            adBox.innerHTML = '⚡ تم تفعيل تردد القسم: (' + sectionName + ') بنجاح يا أبو سمرة!';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function addToList() {
+            userPoints += 15;
+            document.getElementById('points-display').innerHTML = '⭐ النقاط: ' + userPoints;
+            let btn = event.target;
+            let oldText = btn.innerText;
+            btn.style.background = '#00cc44';
+            btn.innerText = 'تمت الإضافة بنجاح ✓';
+            setTimeout(() => {
+                btn.style.background = '#121212';
+                btn.innerText = oldText;
+            }, 2000);
+        }
+
+        function openParty() {
+            let btn = event.target;
+            let oldText = btn.innerText;
+            btn.style.background = '#ff004f';
+            btn.innerText = 'تم تفعيل الغرفة 🎬';
+            setTimeout(() => {
+                btn.style.background = '#121212';
+                btn.innerText = oldText;
+            }, 2000);
+        }
+
+        function shareMovie() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ movie.title }}',
+                    text: 'شاهد هذا الفيلم الأسطوري في سينما أسمرة الإمبراطورية!',
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                prompt('انسخ رابط الفيلم:', window.location.href);
+            }
+        }
+
+        function toggleHud() {
+            document.body.style.filter = document.body.style.filter === 'invert(1)' ? 'none' : 'invert(1)';
+        }
+
+        function spinWheel() {
+            let points = Math.floor(Math.random() * 30) + 10;
+            userPoints += points;
+            document.getElementById('wheel-text').innerHTML = '🎉 مبروك يا فنان! كسبت ' + points + ' نقطة (إجمالي نقاطك: ' + userPoints + ')';
+            document.getElementById('points-display').innerHTML = '⭐ النقاط: ' + userPoints;
+        }
+    </script>
+
+</body>
+</html>

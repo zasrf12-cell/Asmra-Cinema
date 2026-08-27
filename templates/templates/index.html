@@ -1,0 +1,561 @@
+from flask import Flask, render_template_string, request, redirect, url_for
+import sqlite3
+
+app = Flask(__name__)
+
+# إعداد قاعدة البيانات لتخزين الطلبات
+def init_db():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            movie_name TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# الصفحة الرئيسية للموقع
+html_template = '''
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سينما أسمرا - أحدث الأفلام العالمية</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --header-bg: rgba(30, 41, 59, 0.7);
+            --text-color: #ffffff;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --desc-color: #94a3b8;
+        }
+        .light-mode {
+            --bg-color: #f8fafc;
+            --header-bg: rgba(255, 255, 255, 0.7);
+            --text-color: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --desc-color: #64748b;
+        }
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 20%, rgba(229, 9, 20, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+        header {
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: 0.3s;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--card-bg);
+            backdrop-filter: blur(5px);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #e50914;
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            text-shadow: 0 2px 10px rgba(229, 9, 20, 0.3);
+        }
+        header p {
+            color: var(--desc-color);
+            margin: 0 0 15px 0;
+        }
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            direction: ltr;
+        }
+        .search-box input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px 15px;
+            border-radius: 0 25px 25px 0;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            text-align: right;
+        }
+        .search-box button {
+            padding: 12px 20px;
+            border-radius: 25px 0 0 25px;
+            border: none;
+            background-color: #e50914;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+        .genres-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .genre-btn {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(5px);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .genre-btn:hover, .genre-btn.active {
+            background-color: #e50914;
+            color: white;
+            border-color: #e50914;
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+        }
+        .hero-banner {
+            max-width: 1200px;
+            margin: 25px auto;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        @media(min-width: 768px) {
+            .hero-banner {
+                flex-direction: row;
+                height: 380px;
+            }
+        }
+        .hero-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        @media(min-width: 768px) {
+            .hero-img {
+                width: 55%;
+                height: 100%;
+            }
+        }
+        .hero-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: right;
+            width: 100%;
+        }
+        .hero-info h2 {
+            color: #e50914;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+        .hero-info p {
+            color: var(--desc-color);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .hero-btn {
+            background-color: #e50914;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+        .hero-btn:hover {
+            background-color: #b20710;
+        }
+        .container {
+            padding: 0 20px 20px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        h2.section-title {
+            border-right: 4px solid #e50914;
+            padding-right: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            margin-top: 40px;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .movie-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(229, 9, 20, 0.2);
+        }
+        .fav-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--card-border);
+            color: white;
+            font-size: 18px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fav-btn.active {
+            color: #e50914;
+            background: rgba(229, 9, 20, 0.2);
+        }
+        .movie-poster {
+            width: 100%;
+            height: 330px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .movie-card h3 {
+            margin: 10px 0 5px 0;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+        .movie-card p {
+            color: var(--desc-color);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn {
+            background-color: #e50914;
+            color: white;
+            padding: 9px 0;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+        }
+        .btn:hover {
+            background-color: #b20710;
+        }
+        .dropdown {
+            flex: 1;
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background-color: var(--card-bg);
+            backdrop-filter: blur(15px);
+            width: 100%;
+            border-radius: 8px;
+            z-index: 10;
+            border: 1px solid var(--card-border);
+            box-shadow: 0px -8px 20px rgba(0,0,0,0.4);
+        }
+        .dropdown-content.show {
+            display: block !important;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 13px;
+            text-align: center;
+        }
+        .dropdown-content a:hover {
+            background-color: #e50914;
+            color: white;
+        }
+
+        .request-section {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .request-section h3 {
+            color: #e50914;
+            margin-bottom: 10px;
+        }
+        .request-section p {
+            color: var(--desc-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .request-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 500px;
+            margin: auto;
+            flex-wrap: wrap;
+        }
+        .request-box input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+        }
+        .request-box button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #watchModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin-bottom: 15px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            border: none;
+        }
+        .close-btn {
+            background-color: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid var(--card-border);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .close-btn:hover {
+            background-color: #e50914;
+            border-color: #e50914;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            color: var(--desc-color);
+            margin-top: 40px;
+            font-size: 14px;
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="theme-toggle" onclick="toggleTheme()">☀️ الوضع المضيء</button>
+
+        <h1>سينما أسمرا</h1>
+        <p>موقعك الأول لمشاهدة وتحميل أحدث الأفلام الحصرية</p>
+
+        <div class="search-box">
+            <button>بحث</button>
+            <input type="text" id="searchInput" onkeyup="searchMovies()" placeholder="ابحث عن فيلمك المفضلة...">
+        </div>
+
+        <div class="genres-bar">
+            <button class="genre-btn active" onclick="filterGenre('all', this)">الكل</button>
+            <button class="genre-btn" onclick="filterGenre('sci-fi', this)">خيال علمي</button>
+            <button class="genre-btn" onclick="filterGenre('crime', this)">إثارة وجريمة</button>
+            <button class="genre-btn" onclick="filterGenre('action', this)">أكشن</button>
+            <button class="genre-btn" onclick="filterGenre('animation', this)">رسوم متحركة</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- البانر الترويجي المميز -->
+        <div class="hero-banner">
+            <img src="https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="Featured Movie" class="hero-img" loading="lazy">
+            <div class="hero-info">
+                <h2>الفيلم الأحدث حصرياً: أبطال الحركة</h2>
+                <p>ملحمة سينمائية ضخمة تجمع بين أقوى نجوم الأكشن والمغامرات. استمتع بمشاهدة فائقة الجودة وبدون إعلانات مزعجة فقط على سينما أسمرا.</p>
+                <button class="hero-btn" onclick="openMovie('أبطال الحركة', 'ملحمة أكشن حماسية مليئة بالمطاردات والمعارك الخارقة.', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">مشاهدة الفيلم الآن</button>
+            </div>
+        </div>
+
+        <h2 class="section-title">أحدث الأفلام المضافة</h2>
+
+        <div class="movies-grid" id="moviesList">
+            <!-- الفيلم الأول -->
+            <div class="movie-card" data-genre="sci-fi">
+                <button class="fav-btn" onclick="toggleFav(this)">♥</button>
+                <img src="https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="بوستر الفيلم" class="movie-poster" loading="lazy">
+                <h3>مغامرة الفضاء</h3>
+                <p>خيال علمي - 2026</p>
+                <div class="btn-group">
+                    <div class="dropdown">
+                        <button class="btn" onclick="toggleDropdown(event)">تحميل ▼</button>
+                        <div class="dropdown-content">
+                            <a href="https://archive.org" target="_blank">جودة عالية (HD)</a>
+                            <a href="https://archive.org" target="_blank">جودة متوسطة (SD)</a>
+                            <a href="https://archive.org" target="_blank">جودة الموبايل (Low)</a>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="openMovie('مغامرة الفضاء', 'خيال علمي مذهل يأخذك في رحلة عبر مجرات بعيدة لاكتشاف أسرار الكون.', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">مشاهدة</button>
+                </div>
+            </div>
+
+            <!-- الفيلم الثاني -->
+            <div class="movie-card" data-genre="crime">
+                <button class="fav-btn" onclick="toggleFav(this)">♥</button>
+                <img src="https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg" alt="بوستر الفيلم" class="movie-poster" loading="lazy">
+                <h3>السر الغامض</h3>
+                <p>إثارة وجريمة - 2026</p>
+                <div class="btn-group">
+                    <div class="dropdown">
+                        <button class="btn" onclick="toggleDropdown(event)">تحميل ▼</button>
+                        <div class="dropdown-content">
+                            <a href="https://archive.org" target="_blank">جودة عالية (HD)</a>
+                            <a href="https://archive.org" target="_blank">جودة متوسطة (SD)</a>
+                            <a href="https://archive.org" target="_blank">جودة الموبايل (Low)</a>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="openMovie('السر الغامض', 'جريمة غامضة تحدث في مدينة مظلمة، والمحقق يسابق الزمن لفك اللغز.', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">مشاهدة</button>
+                </div>
+            </div>
+
+            <!-- الفيلم الثالث -->
+            <div class="movie-card" data-genre="action">
+                <button class="fav-btn" onclick="toggleFav(this)">♥</button>
+                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="بوستر الفيلم" class="movie-poster" loading="lazy">
+                <h3>مهمة المستحيل</h3>
+                <p>أكشن ومغامرة - 2026</p>
+                <div class="btn-group">
+                    <div class="dropdown">
+                        <button class="btn" onclick="toggleDropdown(event)">تحميل ▼</button>
+                        <div class="dropdown-content">
+                            <a href="https://archive.org" target="_blank">جودة عالية (HD)</a>
+                            <a href="https://archive.org" target="_blank">جودة متوسطة (SD)</a>
+                            <a href="https://archive.org" target="_blank">جودة الموبايل (Low)</a>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="openMovie('مهمة المستحيل', 'عمليات خطيرة ومطاردات حماسية لا تتوقف.', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">مشاهدة</button>
+                </div>
+            </div>
+
+            <!-- الفيلم الرابع -->
+            <div class="movie-card" data-genre="animation">
+                <button class="fav-btn" onclick="toggleFav(this)">♥</button>
+                <img src="https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="بوستر الفيلم" class="movie-poster" loading="lazy">
+                <h3>انسايد آوت</h3>
+                <p>رسوم متحركة - 2026</p>
+                <div class="btn-group">
+                    <div class="dropdown">
+                        <button class="btn" onclick="toggleDropdown(event)">تحميل ▼</button>
+                        <div class="dropdown-content">
+                            <a href="https://archive.org" target="_blank">جودة عالية (HD)</a>
+                            <a href="https://archive.org" target="_blank">جودة متوسطة (SD)</a>
+                            <a href="https://archive.org" target="_blank">جودة الموبايل (Low)</a>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="openMovie('انسايد آوت', 'رحلة ممتعة داخل عقل المشاعر الإنسانية بأسلوب كوميدي ومؤثر.', 'https://www.youtube.com/embed/dQw4w9WgXcQ'

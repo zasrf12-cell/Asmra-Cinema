@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Asmra - قائمة الأفلام</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #f1f1f1;
+            --card-bg: #1e1e1e;
+            --accent-color: #e50914;
+        }
+        [data-theme="light"] {
+            --bg-color: #f4f4f4;
+            --text-color: #111111;
+            --card-bg: #ffffff;
+            --accent-color: #e50914;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Tahoma', sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .theme-btn {
+            background: none;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        h1 {
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 24px;
+            text-align: center;
+        }
+        .header-content {
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .search-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .search-container input {
+            width: 70vw;
+            max-width: 350px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            font-size: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        .search-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+            margin-bottom: 20px;
+        }
+        .genre-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid #444;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .genre-btn:hover, .genre-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .movie-card:hover {
+            transform: scale(1.02);
+        }
+        .movie-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+        .movie-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        .movie-info h3 {
+            font-size: 16px;
+            margin: 0 0 8px 0;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-rating {
+            color: #ffc107;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .details-link {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .details-link:hover {
+            background-color: #b20710;
+        }
+        .system-info {
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            padding: 20px;
+            word-break: break-all;
+        }
+        /* الخلفية العامة والخطوط */
+body {
+    <!-- شريط البحث الذكي بالميكروفون العلوي -->
+<div style="text-align: center; margin: 20px auto 10px auto; padding: 0 15px;">
+    <form action="/" method="GET" id="topSearchForm" style="display: inline-flex; align-items: center; gap: 8px; background: #111118; border: 2px solid #00f3ff; border-radius: 30px; padding: 6px 16px; width: 100%; max-width: 500px; box-shadow: 0 0 15px rgba(0,243,255,0.3);">
+        <button type="submit" style="background: transparent; border: none; color: #00f3ff; font-size: 18px; cursor: pointer;">🔍</button>
+        <input type="text" name="q" id="topSearchInput" placeholder="اسأل الذكاء الاصطناعي أو ابحث بصوتك..." value="{{ current_query }}" style="flex: 1; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; text-align: right;">
+        <button type="button" id="topMicBtn" title="تحدث بالصوت" style="background: #ff007f; border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px #ff007f; flex-shrink: 0;">🎙️</button>
+    </form>
+</div>
+
+<!-- كود تشغيل الميكروفون والبحث الصوتي -->
+<script>
+    const topMicBtn = document.getElementById('topMicBtn');
+    const topSearchInput = document.getElementById('topSearchInput');
+    const topSearchForm = document.getElementById('topSearchForm');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'ar-EG';
+        recognition.interimResults = false;
+
+        topMicBtn.addEventListener('click', () => {
+            try {
+                recognition.start();
+                topSearchInput.placeholder = "جاري الاستماع لصوتك يا فنان...";
+                topMicBtn.style.background = "#00ff66";
+            } catch (e) { console.log(e); }
+        });
+
+        recognition.onresult = (event) => {
+            topSearchInput.value = event.results[0][0].transcript;
+            topMicBtn.style.background = "#ff007f";
+            topSearchForm.submit();
+        };
+
+        recognition.onerror = () => {
+            topMicBtn.style.background = "#ff007f";
+            topSearchInput.placeholder = "ابحث بصوتك أو اكتب اسم الفيلم...";
+        };
+
+        recognition.onend = () => {
+            topMicBtn.style.background = "#ff007f";
+        };
+    } else {
+        topMicBtn.style.display = 'none';
+    }
+</script>
+
+</div>
+
+    background-color: #050508;
+    color: #ffffff;
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+/* 1. الشريط العلوي الزجاجي (Navbar) */
+.cyber-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(5, 5, 8, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.brand-title {
+    font-weight: bold;
+    color: #00f3ff;
+    letter-spacing: 1px;
+}
+
+.user-badge-nav {
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid gold;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: gold;
+}
+
+/* 2. الصفوف الأفقية للأفلام (زي نتفليكس) */
+.category-section {
+    margin: 20px 0;
+    padding: 0 15px;
+}
+
+.section-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #00f3ff;
+    border-right: 3px solid #00f3ff;
+    padding-right: 8px;
+}
+
+.horizontal-movie-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+}
+
+.horizontal-movie-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.horizontal-movie-scroll::-webkit-scrollbar-thumb {
+    background: #00f3ff55;
+    border-radius: 10px;
+}
+
+/* 3. كارت الفيلم السايبري */
+.cyber-movie-card {
+    min-width: 140px;
+    max-width: 140px;
+    background: #0f0f17;
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s ease;
+    flex-shrink: 0;
+}
+
+.cyber-movie-card:hover {
+    transform: translateY(-5px);
+    border-color: #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+.card-img-wrapper {
+    position: relative;
+    height: 190px;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quantum-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #00f3ff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+}
+
+.card-footer {
+    padding: 8px;
+    text-align: center;
+}
+
+.card-footer h4 {
+    font-size: 13px;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-protobuf: ellipsis;
+}
+.movies-grid {
+    display: flex;        /* ده اللي بيخليهم جنب بعض */
+    overflow-x: auto;     /* ده اللي بيسمح بالـ scroll */
+    gap: 15px;            /* مسافة بين الأفلام */
+    padding: 15px;
+    white-space: nowrap;  /* بيمنع الأفلام تنزل سطر جديد */
+}
+
+/* دي عشان نضمن إن كارت الفيلم ليه عرض ثابت */
+.movie-card {
+    flex: 0 0 150px;      /* العرض ثابت بـ 150 بكسل */
+}
+
+.btn-mini-play {
+    display: block;
+    background: linear-gradient(135deg, #ff0055, #7000ff);
+    color: white;
+    text-decoration: none;
+    font-size: 11px;
+    padding: 6px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+<!-- النافبار الجديد -->
+<nav class="cyber-navbar">
+    <div class="brand-title">CINEMA ASMRA</div>
+    <div class="user-badge-nav">👑 350 نقطة</div>
+</nav>
+
+<!-- مسافة عشان مايدخلوش في بعض -->
+<div style="height: 60px;"></div>
+
+<!-- قسم الأفلام -->
+<div class="category-section">
+    <h3 class="section-title">🔥 حصريات إمبراطور السينما</h3>
+    <div class="horizontal-movie-scroll">
+        <div class="cyber-movie-card">
+            <div class="card-img-wrapper">
+                <img src="/static/images/extraction.jpg" alt="Extraction">
+                <span class="quantum-badge">9.1 QN</span>
+            </div>
+            <div class="card-footer">
+                <h4>Extraction</h4>
+                <a href="#" class="btn-mini-play">مشاهدة عرض خاص</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="top-bar">
+        <h1>Cinema Asmra</h1>
+        <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+    </div>
+
+    <div class="header-content">
+        <form action="/" method="GET" class="search-container">
+            <input type="text" name="q" placeholder="ابحث عن فيلمك المفضلة..." value="{{ request.args.get('q', '') }}">
+            <button type="submit" class="search-btn">بحث</button>
+        </form>
+
+        <div class="categories-bar" style="display: flex; gap: 8px; overflow-x: auto; padding: 12px; background: #111; white-space: nowrap;">
+    <a href="/?category=الكل" style="background: {% if active_cat == 'الكل' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'الكل' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold;">الكل</a>
+    <a href="/?category=أكشن" style="background: {% if active_cat == 'أكشن' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'أكشن' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">أكشن 🎬</a>
+    <a href="/?category=رعب" style="background: {% if active_cat == 'رعب' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'رعب' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">رعب 💀</a>
+    <a href="/?category=أجزاء" style="background: {% if active_cat == 'أجزاء' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'أجزاء' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">أجزاء 🔄</a>
+    <a href="/?category=عربي" style="background: {% if active_cat == 'عربي' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'عربي' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">عربي 🇪🇬</a>
+    <a href="/?category=إثارة وتشويق" style="background: {% if active_cat == 'إثارة وتشويق' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'إثارة وتشويق' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">إثارة وتشويق ⚡</a>
+    <a href="/?category=حروب" style="background: {% if active_cat == 'حروب' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'حروب' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">حروب ⚔️</a>
+    <a href="/?category=كوميدي" style="background: {% if active_cat == 'كوميدي' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'كوميدي' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">كوميدي 😂</a>
+    <a href="/?category=دراما" style="background: {% if active_cat == 'دراما' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'دراما' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">دراما 🎭</a>
+    <a href="/?category=رومنسي" style="background: {% if active_cat == 'رومنسي' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'رومنسي' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">رومنسي 💖</a>
+    <a href="/?category=خيال علمي" style="background: {% if active_cat == 'خيال علمي' %}var(--neon-cyan){% else %}#222{% endif %}; color: {% if active_cat == 'خيال علمي' %}#000{% else %}#fff{% endif %}; padding: 8px 16px; border-radius: 20px; text-decoration: none;">خيال علمي 🌌</a>
+</div>
+
+    </div>
+
+    <div class="movies-grid" id="moviesGrid">
+        {% for movie in movies %}
+        <div class="movie-card">
+            <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">
+                <img src="{{ movie.image_url }}" alt="{{ movie.title }}">
+
+            </a>
+            <div class="movie-info">
+                <div>
+                    <h3>{{ movie.title }}</h3>
+                    <p style="font-size: 12px; color: #aaa; margin: 5px 0; line-height: 1.4;">{{ movie.description }}</p>
+                </div>
+                <div>
+                    <div class="movie-rating">⭐ {{ movie.rating }}</div>
+                    <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="details-link">مشاهدة وعرض</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p style="grid-column: 1 / -1; text-align: center; color: #777; padding: 40px;">لا توجد أفلام مضافة حالياً بهذا التصنيف</p>
+        {% endfor %}
+    </div>
+
+    <div class="system-info">
+        معرف التشغيل الآمن: 75239810
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
+    </script>
+
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سينما أسمرة | العقل السليم</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+        body.light-mode {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+        .card {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand fw-bold" href="/">🎬 سينما أسمرة</a>
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-outline-light btn-sm" onclick="toggleDarkMode()">🌓 الوضع المظلم</button>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+
+        <!-- شبكة عرض الأفلام -->
+        <div class="row">
+            {% for movie in movies %}
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <img src="{{ movie.poster or 'https://via.placeholder.com/300x450' }}" class="card-img-top" alt="Poster">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text text-muted small">{{ movie.genre }}</p>
+                        <a href="/movie/{{ movie.id }}" class="btn btn-sm btn-outline-primary">تفاصيل الفيلم</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <h4>عذراً، مفيش أفلام مطابقة للبحث!</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // تفعيل وحفظ الوضع المظلم الذكي في LocalStorage
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        });
+                // دالة البحث الصوتي
+        function startVoiceSearch() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'ar-AR';
+            recognition.start();
+            recognition.onresult = (event) => {
+                document.getElementById('searchInput').value = event.results[0][0].transcript;
+            };
+        }
+
+        // دالة المفضلة
+        function toggleFavorite(movieTitle) {
+            let favorites = JSON.parse(localStorage.getItem('favs') || '[]');
+            if(favorites.includes(movieTitle)) {
+                favorites = favorites.filter(m => m !== movieTitle);
+                alert('تمت الإزالة من المفضلة');
+            } else {
+                favorites.push(movieTitle);
+                alert('تم حفظ "' + movieTitle + '" في المفضلة يا كبير!');
+            }
+            localStorage.setItem('favs', JSON.stringify(favorites));
+        }
+        <script>
+    function startVoiceSearch() {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ar-AR';
+        recognition.start();
+        recognition.onresult = (event) => {
+            document.getElementById('searchInput').value = event.results[0][0].transcript;
+        };
+    }
+</script>
+<style>
+
+/* تأثيرات الإضاءة السينمائية الفخمة */
+.cyber-navbar {
+    background: rgba(5, 5, 10, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 2px solid #00f3ff !important;
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+}
+
+.movie-card, .cyber-movie-card {
+    background: linear-gradient(145deg, #0e0e1a, #16162c) !important;
+    border: 1px solid rgba(0, 243, 255, 0.4) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in-out !important;
+}
+
+/* حركة فخمة لما تحط الماوس أو تلمس الكارت */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: #ff0055 !important;
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.5), 0 10px 30px rgba(0,0,0,0.8);
+}
+
+/* تظبيط العناوين والزرار بشكل راقي */
+.section-title {
+    color: #00f3ff !important;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+}
+</style>
+<style>
+/* تأثيرات الإضاءة السينمائية الفخمة */
+.cyber-navbar {
+    background: rgba(5, 5, 10, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 2px solid #00f3ff !important;
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+}
+
+.movie-card, .cyber-movie-card {
+    background: linear-gradient(145deg, #0e0e1a, #16162c) !important;
+    border: 1px solid rgba(0, 243, 255, 0.4) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in-out !important;
+}
+
+/* حركة فخمة لما تلمس الكارت */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: #ff0055 !important;
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.5), 0 10px 30px rgba(0,0,0,0.8);
+}
+
+/* تظبيط العناوين بشكل راقي */
+.section-title {
+    color: #00f3ff !important;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+}
+
+/* 1. زوم سينمائي ناعم على صور الأفلام */
+.movie-card img, .cyber-movie-card img {
+    transition: transform 0.5s ease !important;
+}
+.movie-card:hover img, .cyber-movie-card:hover img {
+    transform: scale(1.08);
+}
+
+/* 2. نبض نيون خفيف للزراير */
+.movie-card .btn, .cyber-movie-card .btn, a[href*="watch"] {
+    animation: neonPulse 2s infinite;
+}
+
+@keyframes neonPulse {
+    0% { box-shadow: 0 0 5px rgba(255, 0, 85, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(255, 0, 85, 0.8), inset 0 0 10px rgba(255, 0, 85, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(255, 0, 85, 0.4); }
+}
+</style>
+<style>
+/* 1. إضاءة الخلفية والـ Blur الأسطوري للنافبار */
+.cyber-navbar {
+    background: rgba(5, 5, 10, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 2px solid #00f3ff !important;
+    box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
+}
+
+/* 2. تصميم الكروت بفخامة الزجاج الداكن */
+.movie-card, .cyber-movie-card {
+    background: linear-gradient(135deg, rgba(20, 20, 35, 0.9), rgba(10, 10, 20, 0.95)) !important;
+    border: 1px solid rgba(0, 243, 255, 0.3) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    overflow: hidden;
+}
+
+/* 3. حركة طفو الكارت مع إضاءة نيون وردية خطيرة */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: translateY(-10px) scale(1.03) !important;
+    border-color: #ff0055 !important;
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.6), 0 15px 35px rgba(0,0,0,0.9) !important;
+}
+
+/* 4. زوم سينمائي ناعم وساحر على البوستر */
+.movie-card img, .cyber-movie-card img {
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+.movie-card:hover img, .cyber-movie-card:hover img {
+    transform: scale(1.1);
+}
+
+/* 5. نبض نيون أسطوري للزراير يجذب العين فوراً */
+.movie-card .btn, .cyber-movie-card .btn, a[href*="watch"], .btn-danger, .btn-primary {
+    animation: cyberPulse 2s infinite !important;
+    transition: all 0.3s ease !important;
+}
+
+.movie-card .btn:hover, .cyber-movie-card .btn:hover {
+    transform: scale(1.05);
+    background-color: #ff0055 !important;
+    border-color: #ff0055 !important;
+}
+
+@keyframes cyberPulse {
+    0% { box-shadow: 0 0 5px rgba(255, 0, 85, 0.4), inset 0 0 2px rgba(255, 0, 85, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(255, 0, 85, 0.9), inset 0 0 8px rgba(255, 0, 85, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(255, 0, 85, 0.4), inset 0 0 2px rgba(255, 0, 85, 0.2); }
+}
+
+/* 6. عناوين منورة بنيون الأزرق السماوي */
+.section-title {
+    color: #00f3ff !important;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.7);
+    font-weight: 800 !important;
+    letter-spacing: 1.5px;
+}
+</style>
+<style>
+/* 1. خلفية متحركة تدريجياً ببريق خفيف */
+body {
+    background: linear-gradient(125deg, #05050a, #0b0b16, #12081f) !important;
+    background-size: 400% 400% !important;
+    animation: gradientBG 15s ease infinite !important;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 2. إطار نيون بيغير ألوانه بنفسه للكروت */
+.movie-card, .cyber-movie-card {
+    background: rgba(15, 15, 25, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(0, 243, 255, 0.4) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* لمعة ضوئية بتعدي على الكارت لوحدها كل فترة */
+.movie-card::after, .cyber-movie-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(0deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateY(-100%) rotate(45deg); }
+    100% { transform: translateY(100%) rotate(45deg); }
+}
+
+/* 3. تفاعل خارق لما تلمس الكارت */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: translateY(-12px) scale(1.04) !important;
+    border-color: #00ffcc !important;
+    box-shadow: 0 0 40px rgba(0, 255, 204, 0.5), 0 20px 40px rgba(0,0,0,0.95) !important;
+}
+
+/* 4. زوم فخم على بوستر الفيلم */
+.movie-card img, .cyber-movie-card img {
+    transition: transform 0.6s ease !important;
+}
+.movie-card:hover img, .cyber-movie-card:hover img {
+    transform: scale(1.12) rotate(1deg);
+}
+
+/* 5. زراير بسحر الليزر المضيء */
+.movie-card .btn, .cyber-movie-card .btn, a[href*="watch"], .btn-danger, .btn-primary {
+    background: linear-gradient(135deg, #ff0055, #7000ff) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: bold !important;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+    animation: laserGlow 2s infinite alternate;
+}
+
+@keyframes laserGlow {
+    0% { box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); }
+    100% { box-shadow: 0 0 25px rgba(112, 0, 255, 0.8), 0 0 10px rgba(0, 243, 255, 0.6); }
+}
+
+/* 6. العناوين تنطق فخامة */
+.section-title {
+    color: #ffffff !important;
+    background: linear-gradient(90deg, #00f3ff, #ff0055);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900 !important;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+</style>
+<style>
+/* 1. تفعيل منظور الـ 3D للصفحة كلها */
+html {
+    perspective: 1500px; /* بيحدد مدى عمق الـ 3D */
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background: #05050a !important;
+    transform-style: preserve-3d;
+    min-height: 100vh;
+}
+
+/* 2. جعل الكروت تتفاعل وتدور مع الماوس (تأثير الـ Hover ثلاثي الأبعاد) */
+.movie-card, .cyber-movie-card {
+    background: rgba(15, 15, 25, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 243, 255, 0.5) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+
+    /* سحر الـ 3D الأساسي */
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
+    will-change: transform;
+    position: relative;
+}
+
+/* حركة الطفو والدوران لما تلمس الكارت */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: rotateY(10deg) rotateX(5deg) translateZ(30px) !important;
+    border-color: #00ffcc !important;
+    box-shadow: -20px 20px 60px rgba(0, 255, 204, 0.4), 0 20px 50px rgba(0,0,0,0.95) !important;
+}
+
+/* 3. تأثير الـ 3D الداخلي (نخلي العناصر تخرج بره الكارت) */
+.movie-card img, .cyber-movie-card img {
+    transform: translateZ(40px); /* الصورة بتطلع لقدام */
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    border-radius: 15px;
+}
+
+.movie-card:hover img, .cyber-movie-card:hover img {
+    transform: translateZ(60px) scale(1.05); /* زوم مع خروج */
+}
+
+.movie-card h4, .movie-card .btn {
+    transform: translateZ(50px); /* النص والزرار بيطلعوا لقدام */
+}
+
+/* 4. زرار مشاهدة بتأثير "الهولوغرام" المتحرك */
+.movie-card .btn, .cyber-movie-card .btn, a[href*="watch"] {
+    background: linear-gradient(90deg, #ff0055, #7000ff) !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* لمعة الليزر المتحركة جوه الزرار */
+.movie-card .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: btnShine 2s infinite;
+}
+
+@keyframes btnShine {
+    100% { left: 150%; }
+}
+
+.movie-card:hover .btn {
+    transform: translateZ(70px) scale(1.1) !important;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.8), 0 0 15px rgba(255, 0, 85, 0.9);
+}
+
+/* 5. النافبار بتأثير "الزجاج العائم" */
+.cyber-navbar {
+    background: rgba(5, 5, 10, 0.7) !important;
+    backdrop-filter: blur(25px) !important;
+    border-bottom: 3px solid #00f3ff !important;
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.5);
+    transform: translateZ(100px); /* النافبار عايمة فوق المحتوى */
+}
+
+/* 6. تظبيط العناوين والبحث بشكل راقي */
+.section-title {
+    color: #00f3ff !important;
+    text-shadow: 0 0 25px rgba(0, 243, 255, 0.8), 0 2px 4px rgba(0,0,0,0.5);
+    font-weight: 900 !important;
+    letter-spacing: 2px;
+    transform: translateZ(20px);
+}
+
+.search-box input {
+    background: rgba(20, 20, 35, 0.9) !important;
+    border: 2px solid #00f3ff !important;
+    border-radius: 30px !important;
+    color: #fff !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease !important;
+}
+
+.search-box input:focus {
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.6) !important;
+    border-color: #ff0055 !important;
+}
+</style>
+<style>
+/* 1. السحر الأسطوري: تخصيص شريط التمرير (Scrollbar) بلون نيون فاخر */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #05050a;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00f3ff, #ff0055);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #00ffcc;
+}
+
+/* 2. تأثير الـ Glow الخلفي للصفحة (Ambience Lighting) */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 243, 255, 0.03) 0%, rgba(255, 0, 85, 0.02) 40%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* 3. الكروت الخارقة بتصميم فضاء ثلاثي الأبعاد حقيقي */
+.movie-card, .cyber-movie-card {
+    background: linear-gradient(135deg, rgba(18, 18, 30, 0.9), rgba(8, 8, 15, 0.95)) !important;
+    backdrop-filter: blur(25px) !important;
+    border: 1px solid rgba(0, 243, 255, 0.4) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease, border-color 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* تفاعل الرفع الاحترافي مع انعكاس إضاءة ساطع */
+.movie-card:hover, .cyber-movie-card:hover {
+    transform: translateY(-14px) scale(1.03) rotateX(4deg) rotateY(4deg) !important;
+    border-color: #00ffcc !important;
+    box-shadow: -15px 25px 50px rgba(0, 255, 204, 0.3), 0 20px 40px rgba(255, 0, 85, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 4. تأثير الإضاءة المنسابة (Shimmer Effect) على البوستر */
+.movie-card img, .cyber-movie-card img {
+    border-radius: 14px;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease !important;
+    filter: brightness(0.95) contrast(1.05);
+}
+
+.movie-card:hover img, .cyber-movie-card:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.1) contrast(1.15);
+}
+
+/* 5. أزرار سينمائية مكهربة (Cyberpunk Buttons) */
+.movie-card .btn, .cyber-movie-card .btn, a[href*="watch"], .btn-danger, .btn-primary {
+    background: linear-gradient(135deg, #ff0055, #7000ff) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 35px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.movie-card .btn:hover, .cyber-movie-card .btn:hover {
+    transform: scale(1.08) translateY(-2px) !important;
+    background: linear-gradient(135deg, #00f3ff, #7000ff) !important;
+    box-shadow: 0 0 35px rgba(0, 243, 255, 0.8), 0 0 15px rgba(255, 0, 85, 0.8) !important;
+    border-color: #00f3ff !important;
+}
+
+/* 6. الشريط العباقرة (Navbar Glassmorphism عائم) */
+.cyber-navbar {
+    background: rgba(5, 5, 10, 0.8) !important;
+    backdrop-filter: blur(30px) !important;
+    border-bottom: 2px solid rgba(0, 243, 255, 0.6) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 243, 255, 0.2);
+}
+
+/* 7. عناوين تنبض بالحياة مع تدريج ليزري */
+.section-title {
+    color: #fff !important;
+    background: linear-gradient(90deg, #00f3ff, #ff0055, #7000ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900 !important;
+    letter-spacing: 2px;
+    text-shadow: none;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #00f3ff, #ff0055);
+    border-radius: 2px;
+}
+</style>
+
+</body>
+<script>
+    // حركة تفاعلية تخلي الكروت تميل مع حركة الماوس أو اللمس (Tilt Effect للمحترفين)
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.movie-card, .cyber-movie-card');
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // لو الماوس قريب من الكارت، الكارت بيميل نحوه بلطف
+            if (Math.abs(x) < 250 && Math.abs(y) < 250) {
+                card.style.transform = `translateY(-10px) scale(1.03) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+            } else {
+                card.style.transform = 'translateY(0) scale(1) rotateX(0) rotateY(0)';
+            }
+        });
+    });
+</script>
+<style>
+/* إخفاء الماوس العادي وإضافة ماوس ليزر */
+body {
+    cursor: none !important;
+}
+a, button, input {
+    cursor: none !important;
+}
+.cursor-dot {
+    width: 8px; height: 8px; background: #00f3ff;
+    position: fixed; top: 0; left: 0;
+    border-radius: 50%; pointer-events: none; z-index: 1000000;
+    box-shadow: 0 0 15px #00f3ff;
+    transform: translate(-50%, -50%);
+}
+.cursor-outline {
+    width: 35px; height: 35px; border: 2px solid #ff0055;
+    position: fixed; top: 0; left: 0;
+    border-radius: 50%; pointer-events: none; z-index: 999999;
+    transform: translate(-50%, -50%);
+    transition: 0.08s ease-out;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+}
+.cursor-hover .cursor-dot {
+    width: 12px; height: 12px; background: #ff0055;
+}
+.cursor-hover .cursor-outline {
+    width: 55px; height: 55px; border-color: #00f3ff;
+}
+
+/* تأثير الجليتش للعنوان الافتتاحي */
+.glitch-title {
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim {
+    0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+    20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+    40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+    60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); filter: hue-rotate(90deg); }
+    80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+    100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
+}
+</style>
+
+<script>
+    // إنشاء الشاشة الافتتاحية تلقائياً وإضافتها في أول الصفحة
+    const loaderHTML = `
+        <div id="cinematic-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#030305; z-index:999999; display:flex; justify-content:center; align-items:center; transition: opacity 1.5s ease-out;">
+            <h1 style="color:#00f3ff; text-shadow: 0 0 30px #00f3ff, 0 0 60px #ff0055; font-size: 3rem; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; text-align: center;" class="glitch-title">Cinema Asmra</h1>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('afterbegin', loaderHTML);
+
+    // إخفاء الشاشة بعد ثانيتين
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('cinematic-loader');
+            if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1500);
+            }
+        }, 2000);
+    });
+
+    // حركة الماوس الليزر التفاعلية
+    const dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    const outline = document.createElement('div');
+    outline.className = 'cursor-outline';
+    document.body.appendChild(dot);
+    document.body.appendChild(outline);
+
+    window.addEventListener('mousemove', (e) => {
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            outline.style.left = e.clientX + 'px';
+            outline.style.top = e.clientY + 'px';
+        }, 40);
+    });
+
+    document.querySelectorAll('a, button, .movie-card, input').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+</script>
+<style>
+/* تحسين خوارزميات عرض الصور لتظهر بأعلى وضوح ممكن */
+.movie-card img, .cyber-movie-card img {
+    width: 100% !important;
+    height: 380px !important; /* تثبيت طول متناسق وفخم للبوستر */
+    object-fit: cover !important; /* منع مط الصورة وحفظ أبعادها السينمائية */
+    image-rendering: -webkit-optimize-contrast !important; /* زيادة حدة تفاصيل الصورة */
+    filter: contrast(1.1) brightness(1.02) saturate(1.1); /* إبراز ألوان السينما الحقيقية */
+    transition: transform 0.5s ease, filter 0.3s ease !important;
+}
+
+/* لمعة خرافية حول البوستر بجودة الـ 4K */
+.movie-card:hover img, .cyber-movie-card:hover img {
+    filter: contrast(1.15) brightness(1.1) saturate(1.2);
+    transform: scale(1.06);
+}
+</style>
+
+</html>
