@@ -58,3 +58,4 @@ nano flask_app.py
 nano templates/index.html
 nano templates/movie.html
 python flask_app.py
+exit

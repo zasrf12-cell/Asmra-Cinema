@@ -2,97 +2,58 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>سينما أسمرة الإمبراطورية - 13 بوت</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإمبراطور | Asmra Cinema Admin</title>
     <style>
-        body { background: #0f172a; color: #f8fafc; font-family: Tahoma, sans-serif; padding: 20px; text-align: center; margin: 0; }
-        h1 { color: #f43f5e; font-size: 22px; text-shadow: 0 0 10px rgba(244,63,94,0.5); }
-        .box, form, .movie-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 15px; max-width: 500px; margin: 15px auto; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .box h3, form h3 { color: #10b981; text-align: center; margin-top: 0; }
-        .bot-item { font-size: 13px; margin: 4px 0; color: #cbd5e1; }
-        input, textarea { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; box-sizing: border-box; }
-        button { background: #f43f5e; color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 15px; }
-        .btn-fetch { background: #3b82f6; margin-bottom: 15px; }
-        .movie-title { font-size: 18px; color: #38bdf8; font-weight: bold; }
-        .badge { background: #f43f5e; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
-        .poster-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-top: 8px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
+        header { text-align: center; margin-bottom: 30px; padding: 20px; background: #1e293b; border-radius: 12px; border: 1px solid #334155; }
+        h1 { color: #38bdf8; margin-bottom: 10px; font-size: 24px; }
+        p { color: #94a3b8; font-size: 14px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .bot-card { background: #1e293b; padding: 20px; border-radius: 10px; border: 1px solid #334155; text-align: center; transition: 0.3s; }
+        .bot-card:hover { border-color: #38bdf8; transform: translateY(-3px); }
+        .bot-card h3 { color: #f1f5f9; margin-bottom: 10px; font-size: 18px; }
+        .btn { background: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn:hover { background: #0369a1; }
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #38bdf8; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <h1>🎬 سينما أسمرة الإمبراطورية (ترسانة الـ 13 بوت)</h1>
 
-    <div class="box">
-        <h3>🤖 أسطول البوتات الإمبراطورية (13 بوت نشط)</h3>
-        <div class="bot-item">🤖 1. بوت الترجمة النجمية</div>
-        <div class="bot-item">🕵️‍♂️ 2. بوت كشف التسلل والـ IP</div>
-        <div class="bot-item">🎲 3. بوت الجوائز الذهبية</div>
-        <div class="bot-item">📈 4. بوت التقييمات الحي</div>
-        <div class="bot-item">⏱️ 5. بوت عداد التحديثات</div>
-        <div class="bot-item">🎵 6. بوت المؤثرات الصوتية</div>
-        <div class="bot-item">🛡️ 7. جدار الحماية Anti-Injection</div>
-        <div class="bot-item">🔍 8. بوت البحث الذكي الخارق</div>
-        <div class="bot-item">☕ 9. بوت المجاهد السيبراني</div>
-        <div class="bot-item">📖 10. بوت التقرير الشامل</div>
-        <div class="bot-item">🧠 11. بوت الإمبراطور للحل والربط</div>
-        <div class="bot-item">⚡ 12. بوت الإدارة والعدادات التلقائية</div>
-        <div class="bot-item" style="color: #38bdf8; font-weight: bold;">🎯 13. بوت الصيد والتحميل الذكي (للإعلانات والأفلام)</div>
+    <header>
+        <h1>👑 لوحة قيادة الإمبراطور (التحكم في الـ 13 بوت)</h1>
+        <p>منطقة محصنة ومخصصة لإدارة وتعديل وتشغيل أدوات Asmra Cinema</p>
+    </header>
+
+    <div class="grid-container">
+        <!-- توليد كروت الـ 13 بوت بذكاء -->
+        <script>
+            for (let i = 1; i <= 13; i++) {
+                document.write(`
+                    <div class="bot-card">
+                        <h3>🤖 البوت الذكي رقم ${i}</h3>
+                        <p style="margin-bottom: 15px;">جاهز للتشغيل وإدارة المهام</p>
+                        <button class="btn" onclick="runBot(${i})">تشغيل البوت</button>
+                    </div>
+                `);
+            }
+
+            function runBot(id) {
+                fetch('/admin/run_bot/' + id, { method: 'POST' })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data);
+                    })
+                    .catch(error => {
+                        alert('حدث خطأ أثناء الاتصال بالبوت يا إمبراطور!');
+                    });
+            }
+        </script>
     </div>
 
-    <form action="/add_movie" method="POST">
-        <h3>➕ إضافة فيلم وإعلان جديد</h3>
-        <label>اسم الفيلم:</label>
-        <input type="text" name="title" required placeholder="اكتب اسم الفيلم...">
-        
-        <label>التصنيف:</label>
-        <input type="text" name="genre" value="أكشن ودراما" required>
-        
-        <label>التقييم:</label>
-        <input type="text" name="rating" value="10/10 [MEGA]">
-        
-        <label>رابط بوستر الإعلان (صورة غلاف الفيلم):</label>
-        <input type="text" name="poster" placeholder="https://example.com/poster.jpg">
-        
-        <label>رابط فيديو الإعلان / العرض الترويجي (Trailer URL):</label>
-        <input type="text" name="video_url" placeholder="رابط تريلر الإعلان...">
-        
-        <label>سنة الإنتاج:</label>
-        <input type="text" name="release_year" value="2026">
-        
-        <label>وصف الفيلم:</label>
-        <textarea name="description">تمت الإدارة بواسطة بوت الصيد والتحميل الإمبراطوري.</textarea>
-        
-        <button type="submit">🚀 حفظ ونشر الفيلم والإعلان</button>
-    </form>
+    <a href="/" class="back-link">← العودة إلى الصفحة الرئيسية للموقع</a>
 
-    <div class="box">
-        <h3 style="color: #3b82f6;">🎯 اقتراحات بوت الصيد (اضغط للتحميل الفوري)</h3>
-        <form action="/fetch_smart_movie" method="POST">
-            <input type="hidden" name="suggested_title" value="الهروب الكبير - النسخة الإمبراطورية">
-            <input type="hidden" name="suggested_genre" value="أكشن حماسي">
-            <input type="hidden" name="suggested_poster" value="https://via.placeholder.com/400x200/0f172a/38bdf8?text=Trailer+Poster">
-            <p style="font-size: 14px; color: #94a3b8; margin: 5px 0;">🎬 فيلم مقترح: <b>الهروب الكبير</b> (مع الإعلان والبوستر جاهز)</p>
-            <button type="submit" class="btn-fetch">📥 جلب وتحميل هذا الفيلم فوراً</button>
-        </form>
-    </div>
-
-    <div class="box">
-        <h3 style="color: #38bdf8;">🎞️ الأفلام والإعلانات المنشورة حالياً</h3>
-        {% if movies %}
-            {% for m in movies %}
-                <div class="movie-card" style="margin: 10px 0; background: #0f172a;">
-                    <div class="movie-title">{{ m.title }} <span class="badge">{{ m.rating }}</span></div>
-                    <p style="margin: 5px 0; font-size: 13px; color: #94a3b8;">التصنيف: <b>{{ m.genre }}</b> | السنة: <b>{{ m.release_year }}</b></p>
-                    {% if m.poster %}
-                        <img src="{{ m.poster }}" class="poster-preview" alt="بوستر الإعلان">
-                    {% endif %}
-                    <p style="margin: 5px 0; font-size: 13px;">{{ m.description }}</p>
-                    {% if m.video_url %}
-                        <a href="{{ m.video_url }}" target="_blank" style="color: #06b6d4; font-size: 12px; display: block; margin-top: 5px;">▶️ مشاهدة إعلان / فيديو الفيلم</a>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p style="text-align: center; color: #f43f5e; margin: 10px 0;">لا توجد أفلام أو إعلانات منشورة حتى الآن.</p>
-        {% endif %}
-    </div>
 </body>
 </html>
