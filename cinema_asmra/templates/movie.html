@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie[1] }} - سينما أسمرة</title>
+    <style>
+        body { background-color: #0b0b0f; color: #fff; font-family: Tahoma, sans-serif; text-align: right; margin: 0; padding: 15px; }
+        .container { max-width: 800px; margin: 0 auto; background: #13131a; border: 1px solid #ff0055; border-radius: 12px; padding: 20px; }
+        .btn-back { background: #333; color: #fff; padding: 8px 15px; border-radius: 6px; text-decoration: none; display: inline-block; margin-bottom: 15px; font-weight: bold; }
+        h1 { color: #00ffff; margin-bottom: 5px; }
+        .badge { background: #ff0055; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+        .video-box { background: #1a1a24; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        video { width: 100%; border-radius: 6px; background: #000; outline: none; }
+        .input-custom { width: 100%; background: #0b0b0f; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px; margin-bottom: 10px; }
+        .btn-submit { background: #00ffff; color: #000; padding: 10px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
+        .comment-card { background: #1a1a24; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; border-right: 3px solid #ff0055; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="btn-back">⬅ رجوع للرئيسية</a>
+        
+        <h1>🎬 {{ movie[1] }}</h1>
+        <div>
+            <span class="badge">التصنيف: {{ movie[2] }}</span>
+            <span class="badge" style="background: #ffcc00; color: #000;">⭐ التقييم: {{ movie[3] }} / 10</span>
+        </div>
+
+        <p style="color: #ccc; line-height: 1.6; background: #1a1a24; padding: 12px; border-radius: 8px;">
+            <strong>📖 قصة الفيلم:</strong> {{ movie[5] }}
+        </p>
+
+        <!-- إعلان الفيلم الترويجي (التريلر) -->
+        <div class="video-box">
+            <h3 style="color: #ff0055; margin-top: 0;">📢 إعلان الفيلم الترويجي (التريلر الأصلي):</h3>
+            {% if movie[7] %}
+                <video controls preload="metadata">
+                    <source src="{{ movie[7] }}" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            {% else %}
+                <p style="color: #777;">عذراً، التريلر غير متوفر لهذا الفيلم.</p>
+            {% endif %}
+        </div>
+
+        <!-- العرض الأساسي الكامل -->
+        <div class="video-box" style="border-color: #00ffff;">
+            <h3 style="color: #00ffff; margin-top: 0;">▶️ العرض الأساسي الكامل (نسخة عالية الجودة):</h3>
+            {% if movie[6] %}
+                <video controls preload="metadata">
+                    <source src="{{ movie[6] }}" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            {% else %}
+                <p style="color: #777;">عذراً، العرض الكامل غير متوفر حالياً.</p>
+            {% endif %}
+        </div>
+
+        <hr style="border-color: #333; margin: 25px 0;">
+
+        <!-- قسم تعليقات الجماهير -->
+        <h3>💬 تعليقات الإمبراطورية</h3>
+        <form method="POST">
+            <input type="text" name="username" class="input-custom" placeholder="اسمك الكريم (مثال: أبو سمرة)..." required>
+            <textarea name="comment" class="input-custom" rows="2" placeholder="اكتب رأيك في الفيلم..." required></textarea>
+            <button type="submit" class="btn-submit">إرسال التعليق 🚀</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            {% for c in comments %}
+                <div class="comment-card">
+                    <strong style="color: #00ffff;">👤 {{ c[0] }}:</strong>
+                    <p style="margin: 5px 0 0 0; color: #ddd;">{{ c[1] }}</p>
+                </div>
+            {% else %}
+                <p style="color: #777;">كن أول من يترك تعليقاً على هذا الفيلم!</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

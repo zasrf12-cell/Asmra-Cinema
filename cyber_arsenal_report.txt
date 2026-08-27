@@ -1,0 +1,163 @@
+=================================================================
+     التقرير الأمني الشامل للكتيبة - إعداد البطل: أبو سمرة      
+     وقت التنفيذ: 2026-08-24 17:53:23
+=================================================================
+
+1. Target Info:
+- URL: https://python.org
+- IP: 151.101.0.223
+- Title: Welcome to Python.org
+
+2. Security Headers Analysis:
+- X-Frame-Options: غير متاح ❌
+- Content-Security-Policy: غير متاح ❌
+- Strict-Transport-Security: max-age=315360000; preload
+- X-Content-Type-Options: غير متاح ❌
+
+3. Open Ports:
+- [80, 443]
+
+4. Discovered Paths/Files:
+- Found: https://python.org/admin
+- Found: https://python.org/login
+- Found: https://python.org/config.json
+- Found: https://python.org/backup.zip
+- Found: https://python.org/.git
+
+5. Cryptography & Hashing Demo:
+- Sample: AbuSamra_Security_2026
+- MD5: 98e9e1db3f3d9675027b90b47b7d02ab
+- SHA256: a3a6856eaff4448b73688ed2782e4b1505a7d6a0a69483ceed9ffff072e8c4d2
+
+6. Harvested Links (131):
+-> https://python.org/community/diversity/
+-> https://python.org/psf/donations/
+-> https://pytorch.org/
+-> https://policies.python.org/python.org/Privacy-Notice/
+-> https://fosstodon.org/@ThePSF
+-> https://www.linkedin.com/company/python-software-foundation/
+-> https://python.org//docs.python.org/3/tutorial/controlflow.html
+-> https://kivy.org/
+-> https://python.org//jobs.python.org
+-> https://blog.python.org
+-> https://riverbankcomputing.com/software/pyqt/intro
+-> http://brochure.getpython.info/
+-> https://python.org/blogs/
+-> https://python.org/community/awards
+-> https://python.org/about/gettingstarted/
+-> https://python.org/events/python-user-group/
+-> https://python.org/success-stories/category/software-development/
+-> https://en.wikipedia.org/wiki/Tkinter
+-> https://python.org/psf-landing/
+-> https://blog.python.org/2026/08/2026-packaging-council-nominees/
+-> https://wiki.python.org/moin/PythonEventsCalendar#Submitting_an_Event
+-> https://python.org/success-stories/category/scientific/
+-> https://python.org//docs.python.org/3/tutorial/introduction.html#lists
+-> https://python.org/psf/community-stories/
+-> https://python.org/downloads/macos/
+-> https://python.org/psf/get-involved/
+-> https://www.roundup-tracker.org/
+-> https://blog.python.org/2026/08/the-python-documentation-is-now-available-in-russian/
+-> https://pyfound.blogspot.com/2026/08/announcing-packaging-council-election.html
+-> https://translations.python.org/
+-> https://python.org/downloads/
+-> https://xon.sh/
+-> https://trypyramid.com/
+-> https://ipython.org/
+-> https://github.com/python/pythondotorg/issues
+-> https://wiki.python.org/moin/
+-> https://python.org/events/
+-> https://saltproject.io/
+-> https://wiki.python.org/moin/BeginnersGuide
+-> https://python.org/events/python-events/2138/
+-> https://python.org/success-stories/category/government/
+-> https://docs.python.org/3/faq/
+-> https://docs.python.org
+-> https://python.org/success-stories/
+-> https://docs.anthropic.com/
+-> https://python.org/psf/annual-report/2024/
+-> http://pyfound.blogspot.com/
+-> http://pycon.blogspot.com/
+-> https://python.org/community/lists/
+-> https://www.tensorflow.org/
+-> https://python.org/events/python-events/2130/
+-> https://python.org/
+-> https://fastapi.tiangolo.com/
+-> https://python.org/psf/membership/
+-> https://docs.ansible.com/
+-> https://python.org/downloads/source/
+-> https://devguide.python.org/
+-> https://python.org/success-stories/category/engineering/
+-> https://python.org/community/irc/
+-> https://python.org/events/python-events/2109/
+-> https://flask.palletsprojects.com/
+-> https://python.org/download/alternatives
+-> https://python.org/dev/
+-> https://python.org/events/python-events/2165/
+-> https://litestar.dev/
+-> https://python.org/community/
+-> https://www.tornadoweb.org/
+-> https://wiki.qt.io/Qt_for_Python
+-> https://python.org/events/python-events/2202/
+-> https://python.org/about/
+-> https://python.org/doc/
+-> https://python.org/success-stories/category/business/
+-> https://www.python.org/psf/
+-> http://docs.python.org/3/tutorial/introduction.html#using-python-as-a-calculator
+-> https://python.org/downloads/windows/
+-> https://donate.python.org/
+-> https://python.org/download/other/
+-> https://trac.edgewall.org/
+-> https://langchain.com/
+-> https://pypi.org/
+-> https://python.org/jobs/
+-> https://pygobject.gnome.org/
+-> https://python.org/community/forums/
+-> https://python.org/success-stories/category/arts/
+-> https://peps.python.org
+-> https://python.org/downloads/release/python-3147/
+-> https://python.org/psf/
+-> https://github.com/python/cpython/issues
+-> https://www.openstack.org/
+-> http://planetpython.org/
+-> https://www.wxpython.org/
+-> https://python.org/dev/core-mentorship/
+-> https://pyfound.blogspot.com/2026/08/announcing-psf-board-candidates-for-2026.html
+-> https://python.org/success-stories/category/education/
+-> https://huggingface.co/docs/transformers/
+-> https://python.org/about/apps/
+-> https://pyfound.blogspot.com/2026/08/how-aws-powers-pypi-and-psf.html
+-> https://status.python.org/
+-> https://python.org/psf/conduct/
+-> https://python.org/about/quotes/
+-> https://wiki.python.org/moin/PythonBooks
+-> https://scipy.org/
+-> https://python.org//docs.python.org/3/tutorial/
+-> https://twitter.com/ThePSF
+-> https://python.org/events/python-events/
+-> https://python.org/success-stories/building-an-open-source-and-cross-platform-azure-cli-with-python/
+-> https://python.org/dev/security/
+-> https://www.djangoproject.com/
+-> https://python.org/doc/av
+-> https://buildbot.net/
+-> https://python.org/community/workshops/
+-> https://scikit-learn.org/
+-> https://python.org/events/calendars/
+-> https://docs.python.org/3/license.html
+-> https://python.org/downloads/ios/
+-> https://mail.python.org/mailman/listinfo/python-dev
+-> https://python.org/events/python-user-group/past/
+-> https://python.org/community/sigs/
+-> https://pandas.pydata.org/
+-> https://python.org/shell/
+-> https://python.org/doc/essays/
+-> https://python.org//docs.python.org/3/tutorial/controlflow.html#defining-functions
+-> https://python.org/about/legal/
+-> https://python.org/community/logos/
+-> https://python.org/about/help/
+-> https://bottlepy.org
+-> https://python.org/psf/newsletter/
+-> https://python.org/about/apps
+-> https://python.org/downloads/android/
+-> https://python.org/events/python-events/past/
+-> https://dearpygui.readthedocs.io/en/latest/

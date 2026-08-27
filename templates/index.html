@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سينما أسمرة الإمبراطورية</title>
+    <style>
+        body { background: #0b0f19; color: #fff; font-family: Tahoma, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .main-container { width: 100%; max-width: 480px; }
+        .cinema-box { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        h1 { color: #f43f5e; font-size: 20px; margin: 0; font-weight: bold; }
+        .admin-btn-top { background: transparent; border: 1px solid #f59e0b; color: #f59e0b; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        /* التصنيفات الأصلية */
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+        .cat-btn { background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 18px; border-radius: 20px; font-size: 13px; white-space: nowrap; text-decoration: none; }
+        .cat-btn.active { background: #06b6d4; color: #000; font-weight: bold; }
+
+        /* الأفلام */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+        .movie-card { background: #1e293b; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid #334155; }
+        .movie-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
+        .movie-title { font-size: 13px; font-weight: bold; margin: 8px 0; color: #f8fafc; }
+        .watch-btn { display: block; background: #e11d48; color: #fff; padding: 6px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; }
+
+        /* لوحة الإدارة المدمجة */
+        .inline-admin { margin-top: 25px; background: #0f172a; border: 1px solid #3b82f6; border-radius: 12px; padding: 15px; }
+        .inline-admin h3 { color: #3b82f6; font-size: 15px; margin-top: 0; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- === قسم الأفكار والبوتات الـ 13 المدمج === -->
+    <div id="bots-ideas-section" style="background: #1e1b4b; border: 1px solid #6366f1; border-radius: 14px; padding: 15px; margin-top: 20px;">
+        <h3 style="color: #818cf8; font-size: 16px; margin-top: 0;">🤖 مركز الـ 13 بوت وأفكار الذكاء الاصطناعي</h3>
+        <p style="color: #c7d2fe; font-size: 12px; line-height: 1.4;">هنا تم دمج كافة البوتات والأفكار البرمجية وتحديثها أوتوماتيكياً عبر التيرمكس يا إمبراطور.</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+            <a href="/ideas" style="background: #4f46e5; color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: bold;">💡 صفحة الأفكار والذكاء الاصطناعي</a>
+            <a href="/bots" style="background: #0d9488; color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: bold;">⚙️ إدارة الـ 13 بوت</a>
+        </div>
+    </div>
+    <!-- === نهاية القسم === -->
+    
+
+    <!-- Categories and Admin Bar -->
+    <div style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 15px; margin-bottom: 15px; background: #111827; border-radius: 12px;">
+        <a href="#" style="background: #06b6d4; color: #000; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: bold; text-decoration: none; white-space: nowrap;">All</a>
+        <a href="#" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; white-space: nowrap;">Action</a>
+        <a href="#" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; white-space: nowrap;">Arabic</a>
+        <a href="#" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; white-space: nowrap;">War</a>
+    </div>
+    
+
+<div class="main-container">
+    <div class="cinema-box">
+        <!-- العنوان وزر الإدارة العلوي -->
+        <div class="header-row">
+            <h1>🎬 سينما أسمرة الإمبراطورية</h1>
+            <a href="#admin-section" class="admin-btn-top">⚙️ لوحة الإدارة</a>
+        </div>
+
+        <!-- التصنيفات الأصلية -->
+        <div class="categories">
+            <a href="#" class="cat-btn active">الكل</a>
+            <a href="#" class="cat-btn">أكشن</a>
+            <a href="#" class="cat-btn">عربي</a>
+            <a href="#" class="cat-btn">حروب</a>
+            <a href="#" class="cat-btn">رعب</a>
+        </div>
+
+        <!-- عرض الأفلام -->
+        <hr style="border: 0; border-top: 1px solid #1f2937; margin: 15px 0;">
+        <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 10px;">🎥 الأفلام المعروضة</h3>
+        
+        {% if movies %}
+            <div class="movie-grid">
+                {% for m in movies %}
+                    <div class="movie-card">
+                        {% if m.poster %}
+                            <img src="{{ m.poster }}" alt="بوستر">
+                        {% else %}
+                            <img src="https://via.placeholder.com/140x160?text=No+Image" alt="افتراضي">
+                        {% endif %}
+                        <div class="movie-title">{{ m.title }}</div>
+                        {% if m.video_url %}
+                            <a href="{{ m.video_url }}" class="watch-btn" target="_blank">مشاهدة الفيلم</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="text-align: center; color: #94a3b8; font-size: 13px; padding: 15px;">🚫 لا توجد أفلام مضافة في هذا التصنيف حالياً يا إمبراطور.</p>
+        {% endif %}
+
+        <!-- لوحة الإدارة المدمجة في نفس الصفحة -->
+        <div id="admin-section" class="inline-admin">
+            <h3>🛠️ لوحة التحكم السريعة</h3>
+            <p style="font-size: 12px; color: #94a3b8; line-height: 1.4;">إدارة الأفلام والبوتات مباشرة من هنا دون مغادرة الصفحة الرئيسية.</p>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <a href="/admin" style="background: #2563eb; color: #fff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; flex: 1; text-align: center;">إدارة الأفلام</a>
+                <a href="#" style="background: #059669; color: #fff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; flex: 1; text-align: center;">إدارة البوتات</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

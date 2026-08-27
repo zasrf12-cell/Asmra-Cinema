@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل دخول الإدارة - سينما أسمرة</title>
+    <style>
+        body { background-color: #0b0b0f; color: #fff; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #13131a; border: 1px solid #ff0055; padding: 25px; border-radius: 12px; width: 300px; text-align: center; }
+        .input-box { width: 100%; background: #0b0b0f; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 6px; box-sizing: border-box; margin: 15px 0; text-align: center; font-size: 18px; letter-spacing: 3px; }
+        .btn { background: #ff0055; color: #fff; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2 style="color: #00ffff; margin-top: 0;">🔐 منطقة سرية للإدارة</h2>
+        <p style="font-size: 13px; color: #aaa;">أدخل الرقم السري للوحة التحكم:</p>
+        {% if error %}
+            <p style="color: #ff0033; font-size: 12px;">{{ error }}</p>
+        {% endif %}
+        <form method="POST">
+            <input type="password" name="pin" class="input-box" placeholder="••••" required autofocus>
+            <button type="submit" class="btn">دخول الإمبراطور</button>
+        </form>
+        <br>
+        <a href="/" style="color: #ffcc00; font-size: 12px; text-decoration: none;">⬅ العودة للرئيسية</a>
+    </div>
+</body>
+</html>

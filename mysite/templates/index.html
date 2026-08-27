@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سينما أسمرة - الرئيسية</title>
+    <style>
+        body { background-color: #0b0b0f; color: #fff; font-family: Tahoma, sans-serif; text-align: right; margin: 0; padding: 15px; }
+        .container { max-width: 900px; margin: 0 auto; background: #13131a; border: 1px solid #22223b; border-radius: 12px; padding: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        h1 { color: #ff0055; margin: 0; font-size: 22px; }
+        .btn-admin { background: #1a1a24; color: #ffcc00; border: 1px solid #ffcc00; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; }
+        .categories-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; white-space: nowrap; }
+        .cat-btn { background: #1a1a24; color: #00ffff; border: 1px solid #00ffff; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: bold; cursor: pointer; display: inline-block; }
+        .cat-btn.active { background: #00ffff; color: #000; }
+        .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .movie-card { background: #1a1a24; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-decoration: none; color: #fff; display: flex; flex-direction: column; transition: 0.2s; }
+        .movie-card:hover { border-color: #ff0055; transform: translateY(-3px); }
+        .movie-img { width: 100%; height: 220px; object-fit: cover; background: #000; }
+        .movie-info { padding: 10px; text-align: center; }
+        .movie-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .movie-meta { font-size: 12px; color: #aaa; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 سينما أسمرة الإمبراطورية</h1>
+            <a href="/admin" class="btn-admin">⚙️ لوحة الإدارة (سري)</a>
+        </div>
+
+        <div class="categories-bar">
+            <a href="/?genre=الكل" class="cat-btn {% if selected_genre == 'الكل' or not selected_genre %}active{% endif %}">الكل</a>
+            <a href="/?genre=أكشن" class="cat-btn {% if selected_genre == 'أكشن' %}active{% endif %}">أكشن</a>
+            <a href="/?genre=عربي" class="cat-btn {% if selected_genre == 'عربي' %}active{% endif %}">عربي</a>
+            <a href="/?genre=حروب" class="cat-btn {% if selected_genre == 'حروب' %}active{% endif %}">حروب</a>
+            <a href="/?genre=رعب" class="cat-btn {% if selected_genre == 'رعب' %}active{% endif %}">رعب</a>
+            <a href="/?genre=تشويق وإثارة" class="cat-btn {% if selected_genre == 'تشويق وإثارة' %}active{% endif %}">تشويق وإثارة</a>
+            <a href="/?genre=خيال علمي" class="cat-btn {% if selected_genre == 'خيال علمي' %}active{% endif %}">خيال علمي</a>
+            <a href="/?genre=رومنسي" class="cat-btn {% if selected_genre == 'رومنسي' %}active{% endif %}">رومنسي</a>
+            <a href="/?genre=كوميدي" class="cat-btn {% if selected_genre == 'كوميدي' %}active{% endif %}">كوميدي</a>
+            <a href="/?genre=دراما" class="cat-btn {% if selected_genre == 'دراما' %}active{% endif %}">دراما</a>
+        </div>
+
+        <div class="movies-grid">
+            {% for m in movies %}
+                <a href="/movie/{{ m[0] }}" class="movie-card">
+                    {% if m[4] %}
+                        <img src="{{ m[4] }}" alt="{{ m[1] }}" class="movie-img">
+                    {% else %}
+                        <div class="movie-img" style="display: flex; align-items: center; justify-content: center; color: #ff0055; font-size: 12px;">بدون بوستر</div>
+                    {% endif %}
+                    <div class="movie-info">
+                        <div class="movie-title">{{ m[1] }}</div>
+                        <div class="movie-meta">
+                            <span style="color: #00ffcc;">{{ m[2] }}</span>
+                            <span style="color: #ffcc00;">⭐ {{ m[3] }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% else %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #777;">
+                    🚫 لا توجد أفلام مضافة في هذا التصنيف حالياً يا إمبراطور.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
