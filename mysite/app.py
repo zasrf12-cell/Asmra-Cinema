@@ -34,7 +34,7 @@ def index():
     cursor.execute("SELECT * FROM movies ORDER BY id DESC")
     movies = cursor.fetchall()
     conn.close()
-    return render_template('admin.html', movies=movies)
+    return render_template('index.html', movies=movies)
 
 @app.route('/add_movie', methods=['POST'])
 def add_movie():
