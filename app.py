@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, session, render_template_string
+from flask import Flask, render_template, render_template_string, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key_for_bots'
