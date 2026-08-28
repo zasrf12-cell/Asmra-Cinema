@@ -210,5 +210,9 @@ def delete_movie(movie_id):
         conn.close()
     return redirect(url_for('admin'))
 
+@app.route('/bots')
+def bots_control():
+    return render_template('bots_control.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
