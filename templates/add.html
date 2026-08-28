@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إضافة فيلم - سينما أسمرة</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: Tahoma, sans-serif; text-align: center; padding-top: 50px; }
+        .box { background: #1e1e1e; padding: 20px; border-radius: 10px; display: inline-block; width: 300px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #2c2c2c; color: #fff; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #218838; }
+        a { color: #0088cc; text-decoration: none; display: block; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>إضافة فيلم جديد</h2>
+        <form method="POST">
+            <input type="text" name="title" placeholder="اكتب اسم الفيلم هنا..." required>
+            <input type="url" name="video_url" placeholder="حط رابط تليجرام هنا..." required>
+            <button type="submit">إضافة للموقع</button>
+                    <div style="margin: 15px 0; background: #111; padding: 12px; border: 2px solid #00ffcc; border-radius: 8px; text-align: center;">
+        <input type="text" id="movie-url-input" placeholder="حط رابط الفيلم هنا لجلب البيانات..." style="width: 90%; padding: 8px; margin-bottom: 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px;">
+        <br>
+        <button type="button" onclick="autoFetchMovie()" style="background: #00ffcc; color: #000; padding: 8px 15px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer;">
+            🔍 جلب البيانات تلقائياً
+        </button>
+    </div>
+
+    <button type="submit" style="background: #e91e63; color: #fff; padding: 10px; width: 100%; border: none; border-radius: 5px; font-weight: bold;">إضافة للموقع</button>
+</form>
+
+        <a href="{{ url_for('index') }}">العودة للرئيسية</a>
+    </div>
+    <script>
+    function autoFetchMovie() {
+        let url = document.getElementById('movie-url-input').value;
+        if(!url) { alert('حط الرابط الأول!'); return; }
+
+        fetch('/fetch_movie', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'url=' + encodeURIComponent(url)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.title) {
+                document.querySelector('input[name="title"]').value = data.title;
+                alert('تم جلب البيانات بنجاح! 🚀');
+            } else {
+                alert('خطأ، جرب رابط تاني.');
+            }
+        });
+    }
+    </script>
+
+</body>
+</html>

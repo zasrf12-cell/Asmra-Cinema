@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} | Cinema Asmra - Ultimate Universe Edition</title>
+    <style>
+        :root {
+            --bg-color: #010103;
+            --card-bg: rgba(8, 8, 14, 0.96);
+            --accent-color: #ff0055;
+            --accent-hover: #ff1a66;
+            --gold-color: #f5c518;
+            --text-main: #ffffff;
+            --text-muted: #9999bb;
+            --blur-strength: 60px;
+            --bg-brightness: 0.12;
+            --dynamic-glow: rgba(255, 0, 85, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 15px;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.4s ease, filter 0.4s ease;
+        }
+
+        /* وضع الجليتش السيبراني */
+        body.cyber-glitch {
+            animation: glitchAnim 0.3s infinite;
+        }
+        @keyframes glitchAnim {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg) contrast(2); }
+            40% { transform: translate(-3px, -3px); filter: hue-rotate(180deg); }
+            60% { transform: translate(3px, 3px); filter: invert(0.1); }
+            80% { transform: translate(3px, -3px); filter: hue-rotate(270deg); }
+            100% { transform: translate(0); filter: hue-rotate(360deg); }
+        }
+
+        /* وضع الهولوجرام الفضائي */
+        body.hologram-mode {
+            filter: hue-rotate(140deg) contrast(1.3) brightness(1.1);
+        }
+        body.hologram-mode::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 128, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* وضع اختراق الكود الذاتي (Matrix Reality Hack) */
+        body.matrix-hack-mode {
+            background-color: #000200 !important;
+            filter: contrast(1.5) brightness(1.2);
+        }
+        body.matrix-hack-mode::before {
+            background: repeating-linear-gradient(0deg, rgba(0,255,65,0.03), rgba(0,255,65,0.03) 1px, transparent 1px, transparent 2px) !important;
+            /* ستايل واجهة الجيل القادم */
+.matrix-hack-mode {
+    background: #000 !important;
+    color: #00ff41 !important;
+    filter: contrast(1.2) brightness(1.1);
+}
+.matrix-hack-mode .movie-container,
+.matrix-hack-mode .recommendations-section {
+    border: 1px solid #00ff41 !important;
+    box-shadow: 0 0 10px #00ff41 !important;
+}
+
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('{{ movie.image_url }}') no-repeat center center;
+            background-size: cover;
+            filter: blur(var(--blur-strength)) brightness(var(--bg-brightness));
+            transform: scale(1.1);
+            z-index: -3;
+        }
+
+        #starfieldCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -2;
+        }
+
+        #warpOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0;
+            transition: opacity 0.4s ease;
+            background: radial-gradient(circle, #ffffff 10%, #010103 90%);
+        }
+
+        .danmu-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 35vh;
+            pointer-events: none; overflow: hidden; z-index: 5;
+        }
+        .danmu-item {
+            position: absolute; white-space: nowrap; color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px);
+            padding: 4px 12px; border-radius: 20px; font-size: 11px;
+            border: 1px solid rgba(245, 197, 24, 0.3);
+            animation: floatDanmu 7s linear forwards;
+        }
+        @keyframes floatDanmu {
+            0% { transform: translateX(100vw); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(-100vw); opacity: 0; }
+        }
+
+        .hud-container {
+            position: fixed; bottom: 15px; left: 15px; right: 15px; max-width: 500px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 10, 20, 0.85); backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 197, 24, 0.4); padding: 8px 16px;
+            border-radius: 30px; font-size: 11px; color: var(--gold-color);
+            z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 500px; margin: 0 auto 10px auto; width: 100%; gap: 5px; flex-wrap: wrap; z-index: 20;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px; color: #fff; text-decoration: none;
+            font-weight: 600; font-size: 12px; background: rgba(255, 255, 255, 0.08);
+            padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .back-link:hover { background: var(--accent-color); }
+
+        .smart-controls { display: flex; gap: 5px; flex-wrap: wrap; }
+        .smart-pill {
+            background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 5px 10px; border-radius: 20px; color: var(--gold-color); cursor: pointer;
+            font-size: 11px; display: flex; align-items: center; gap: 4px; transition: 0.3s;
+        }
+        .smart-pill:hover { background: rgba(245, 197, 24, 0.2); }
+
+        .trend-pill {
+            background: linear-gradient(135deg, #ff0055, #ff5500) !important;
+            color: #fff !important;
+            border: none !important;
+            font-weight: bold;
+        }
+
+        .hologram-pill {
+            background: linear-gradient(135deg, #00ffff, #0077ff) !important;
+            color: #000 !important;
+            border: none !important;
+            font-weight: 900;
+        }
+
+        .matrix-pill {
+            background: linear-gradient(135deg, #00ff41, #003311) !important;
+            color: #00ff41 !important;
+            border: 1px solid #00ff41 !important;
+            font-weight: 900;
+            box-shadow: 0 0 12px rgba(0, 255, 65, 0.5);
+            animation: pulseMatrixBtn 2s infinite;
+        }
+        @keyframes pulseMatrixBtn {
+            0% { box-shadow: 0 0 5px rgba(0,255,65,0.3); }
+            50% { box-shadow: 0 0 15px rgba(0,255,65,0.9); }
+            100% { box-shadow: 0 0 5px rgba(0,255,65,0.3); }
+        }
+
+        .movie-card {
+            background: var(--card-bg); backdrop-filter: blur(35px);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px;
+            padding: 20px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 50px var(--dynamic-glow);
+            max-width: 500px; margin: 0 auto 60px auto; width: 100%; box-sizing: border-box;
+            position: relative; transition: transform 0.1s ease-out, box-shadow 0.8s ease;
+            transform-style: preserve-style; z-index: 20;
+            overflow: hidden;
+        }
+        .movie-card.thermal-glow {
+            animation: pulseHeat 4s infinite alternate;
+        }
+        @keyframes pulseHeat {
+            from { box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
+            to { box-shadow: 0 0 40px rgba(255, 0, 85, 0.8); }
+        }
+
+        .movie-poster {
+            width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+        .movie-poster img { width: 100%; height: auto; max-height: 250px; object-fit: cover; display: block; }
+        .exclusive-badge {
+            position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.85);
+            color: var(--gold-color); border: 1px solid rgba(245, 197, 24, 0.4);
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800;
+        }
+
+        .movie-info h1 { color: var(--text-main); margin: 0 0 6px 0; font-size: 22px; font-weight: 800; }
+
+        .trending-ticker {
+            background: linear-gradient(90deg, rgba(255,0,85,0.2), rgba(245,197,24,0.2));
+            border: 1px dashed rgba(245, 197, 24, 0.4);
+            border-radius: 10px;
+            padding: 6px 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: var(--gold-color);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .trending-ticker span {
+            display: inline-block;
+            animation: marquee 12s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .hologram-panel {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px dashed #00ffff;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #00ffff;
+            display: none;
+        }
+        .hologram-panel.active {
+            display: block;
+            animation: fadeInHolo 0.5s ease;
+        }
+        @keyframes fadeInHolo {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .matrix-secret-box {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid #00ff41;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #00ff41;
+            display: none;
+            font-family: monospace;
+        }
+        .matrix-secret-box.active {
+            display: block;
+            animation: matrixPulse 0.4s ease;
+        }
+        @keyframes matrixPulse {
+            0% { opacity: 0; filter: blur(5px); }
+            100% { opacity: 1; filter: blur(0); }
+        }
+
+        .badges-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .genre-badge { background: rgba(255, 0, 85, 0.15); color: #ff4d79; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid rgba(255, 0, 85, 0.3); }
+        .quality-badge { background: rgba(245, 197, 24, 0.15); color: var(--gold-color); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid rgba(245, 197, 24, 0.3); }
+
+        .description { font-size: 12px; line-height: 1.5; color: var(--text-muted); margin-bottom: 12px; }
+
+        .panel-box {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px; padding: 10px; margin-bottom: 12px;
+        }
+        .panel-title { font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; }
+        .panel-row { display: flex; gap: 6px; }
+        .panel-btn {
+            flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc; padding: 6px; border-radius: 8px; font-size: 10px; cursor: pointer; text-align: center; transition: 0.2s;
+        }
+        .panel-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .ai-chat-box {
+            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 255, 102, 0.3);
+            border-radius: 10px; padding: 8px; margin-top: 6px; font-size: 11px; color: #fff;
+        }
+        .ai-chat-input-row { display: flex; gap: 5px; margin-top: 6px; }
+        .ai-chat-input {
+            flex: 1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px; padding: 5px 8px; color: #fff; font-size: 11px; outline: none;
+        }
+        .ai-chat-btn {
+            background: #00ff66; color: #000; border: none; padding: 5px 10px;
+            border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer;
+        }
+
+        .primary-actions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .watch-btn {
+            background: var(--accent-color); color: white; border: none; padding: 11px;
+            border-radius: 12px; font-size: 14px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+            box-shadow: 0 8px 20px var(--dynamic-glow); transition: 0.3s;
+        }
+        .watch-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+
+        .action-row-grid { display: flex; gap: 6px; }
+        .party-btn, .watchlist-btn {
+            flex: 1; background: rgba(255, 255, 255, 0.06); color: white;
+            border: 1px solid rgba(255, 255, 255, 0.12); padding: 9px;
+            border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.3s;
+        }
+        .party-btn:hover, .watchlist-btn:hover { background: rgba(255, 255, 255, 0.12); }
+        .watchlist-btn.active { background: rgba(245, 197, 24, 0.2); border-color: var(--gold-color); color: var(--gold-color); }
+
+        .video-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(15px);
+            display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px;
+            box-sizing: border-box;
+        }
+        .video-modal.active { display: flex; }
+        .modal-content {
+            background: #08080c; border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px; width: 100%; max-width: 650px; overflow: hidden;
+            box-shadow: 0 30px 60px var(--dynamic-glow); position: relative;
+        }
+        .modal-header {
+            justify-content: space-between; align-items: center;
+            padding: 12px 16px; background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); font-weight: bold; font-size: 14px;
+            display: flex;
+        }
+        .close-modal { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+        .video-container-box { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+        .fake-player-placeholder {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0a0a12, #020205); color: #fff; text-align: center; padding: 20px;
+        }
+        .fake-player-placeholder h3 { margin: 10px 0 5px 0; font-size: 18px; color: var(--gold-color); }
+        .fake-player-placeholder p { font-size: 12px; color: #aaa; margin: 0; }
+    </style>
+</head>
+<body onmousemove="handleTilt(event)">
+
+    <canvas id="starfieldCanvas"></canvas>
+    <div id="warpOverlay"></div>
+    <div class="danmu-container" id="danmuContainer"></div>
+
+    <div class="hud-container">
+        <span>🏆 الرتبة: <strong id="userRank">إمبراطور السينما</strong></span>
+        <span>⭐ النقاط: <strong id="userPoints">350</strong></span>
+    </div>
+
+    <div class="top-nav">
+        <a href="{{ url_for('index') }}" class="back-link">⬅ الرئيسية</a>
+        <div class="smart-controls">
+            <button class="smart-pill" onclick="triggerCyberGlitch();">💻 جليتش سيبراني</button>
+            <button class="smart-pill" onclick="openMissionControl();">🛰️ ناسا الحية</button>
+            <button class="smart-pill" onclick="thermalMode();">🌡️ نبض حراري</button>
+            <button class="smart-pill" onclick="triggerTimeTravel();">⏳ السفر بالزمن</button>
+            <button class="smart-pill trend-pill" onclick="triggerTrendBoost();">🔥 تريند اليوم</button>
+            <button class="smart-pill hologram-pill" onclick="toggleHologramMode();">📡 هولوجرام فضائي</button>
+            <button class="smart-pill matrix-pill" onclick="triggerMatrixRealityHack();">🧬 اختراق الواقع</button>
+        </div>
+    </div>
+
+    <div class="movie-card" id="movieCard">
+        <div class="movie-poster">
+            <div class="exclusive-badge">⭐ إمبراطورية Cinema Asmra</div>
+            <img src="{{ movie.image_url }}" alt="{{ movie.title }}">
+        </div>
+
+        <div class="movie-info">
+            <h1>{{ movie.title }}</h1>
+
+            <div class="trending-ticker">
+                <span>🔥 عاجل الآن: فيلم "{{ movie.title }}" يحقق أعلى معدل مشاهدة في إمبراطورية Cinema Asmra بتوقيع أبو سمرة! 🚀</span>
+            </div>
+
+            <div class="hologram-panel" id="hologramPanel">
+                📡 <strong>بث الهولوجرام الفضائي نشط:</strong> جارٍ تحليل النبضات السينمائية لفيلم "{{ movie.title }}" عبر شبكة الكواكب.. نسبة الإبهار والروعة: <strong>1000%</strong> بتوجيه القائد أبو سمرة!
+            </div>
+
+            <div class="matrix-secret-box" id="matrixSecretBox">
+                [SYSTEM WARNING]: تم تفعيل البرمجة الذاتية للملف الشخصي.<br>
+                👤 المشاهد الحالي والمالك الوحيد للسلطة: <span style="color: #fff; font-weight: bold;">أبو سمرة</span>.<br>
+                ⚡ حالة الشاشة: النظام يقرأ أفكارك ويعيد تشكيل السينما بناءً على مزاجك الآن!
+            </div>
+
+            <div class="badges-row">
+                <span class="genre-badge">{{ movie.genre }}</span>
+                <span class="quality-badge">8K UNIVERSE</span>
+            </div>
+
+            <p class="description">{{ movie.description }}</p>
+
+            <div class="panel-box" style="border-color: rgba(245, 197, 24, 0.4);">
+                <div class="panel-title" style="color: var(--gold-color);">🎡 عجلة حظ السهرة الكونية:</div>
+                <div class="panel-row">
+                    <button class="panel-btn" style="border-color: var(--gold-color); color: var(--gold-color);" onclick="spinCosmicWheel();">🎲 لف العجلة واكسب نقاط</button>
+                </div>
+            </div>
+
+            <div class="panel-box" style="border-color: rgba(0, 255, 102, 0.4);">
+                <div class="panel-title" style="color: #00ff66;">🤖 ناقد سينيما Asmra الخارق:</div>
+                <div class="ai-chat-box" id="aiChatOutput">
+                    أهلاً بك يا أبو سمرة في قمة القمة! اسألني عن الفيلم أو اطلب إفيه سينمائي وهرد عليك فوراً.
+                </div>
+                <div class="ai-chat-input-row">
+                    <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="اكتب سؤالك هنا يا فنان...">
+                    <button class="ai-chat-btn" onclick="sendAIChatQuery();">إرسال</button>
+                </div>
+            </div>
+
+            <div class="primary-actions">
+                <button class="watch-btn" onclick="triggerWarpAndOpen(); addPoints(25);">
+                    ▶ مشاهدة الفيلم بجودة إمبراطورية
+                </button>
+                <div class="action-row-grid">
+                    <button class="watchlist-btn" id="watchlistBtn" onclick="toggleWatchlist();">
+                        ⭐ أضف لقائمة السهرة
+                    </button>
+                    <button class="party-btn" onclick="generateWatchPartyLink();">
+                        🎉 غرفة سهرة إمبراطورية
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- زرار تفعيل واجهة الجيل القادم -->
+<div style="margin: 30px auto; text-align: center;">
+    <button onclick="document.body.classList.toggle('matrix-hack-mode')"
+            style="background: linear-gradient(135deg, #00ff41, #008f11); color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px rgba(0,255,65,0.4);">
+        ⚡ تفعيل واجهة الجيل القادم (Cyber HUD)
+    </button>
+</div>
+
+    </div>
+<div class="recommendations-section" style="margin: 40px auto; padding: 20px; background: rgba(20, 20, 20, 0.9); border-radius: 12px; max-width: 800px;">
+    <h3 style="color: var(--gold-color, #ffd700); margin-bottom: 20px; text-align: center;">🎬 أفلام مشابهة تعجبك</h3>
+    <div class="row" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        {% for rec in recommended_movies %}
+            <div class="movie-card" style="background: #1e1e1e; padding: 10px; border-radius: 8px; width: 160px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                <img src="{{ rec.image_url }}" alt="{{ rec.title }}" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px;">
+                <h4 style="color: #fff; font-size: 14px; margin: 10px 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ rec.title }}</h4>
+                <a href="{{ url_for('movie_detail', movie_id=rec.id) }}" class="btn" style="background: #e50914; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 12px; display: inline-block;">شاهد الفيلم</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<!-- قسم التعليقات -->
+<div class="comments-section" style="margin: 40px auto; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; max-width: 800px; color: white;">
+    <h3 style="color: var(--gold-color, #ffd700); margin-bottom: 20px;">💬 آراء الإمبراطورية</h3>
+
+    <!-- فورم إضافة تعليق -->
+    <form action="{{ url_for('add_comment', movie_id=movie.id) }}" method="POST" style="margin-bottom: 20px;">
+        <textarea name="content" required placeholder="اكتب رأيك يا إمبراطور..." style="width: 100%; padding: 10px; border-radius: 8px; background: #222; color: #fff; border: 1px solid #444; min-height: 80px;"></textarea>
+        <button type="submit" style="margin-top: 10px; background: var(--gold-color, #ffd700); color: #000; border: none; padding: 8px 20px; border-radius: 5px; font-weight: bold; cursor: pointer;">إرسال التعليق</button>
+    </form>
+
+    <!-- عرض التعليقات -->
+    {% for comment in comments %}
+        <div style="background: #151515; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 3px solid var(--gold-color, #ffd700);">
+            <p style="margin: 0; font-size: 14px; color: #ddd;">{{ comment.content }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+    <div class="movie-player-container" style="text-align: center; padding: 20px;">
+
+    <!-- التحقق الذكي: لو يوتيوب يشتغل جوه الموقع، لو تليجرام أو غيره يظهر الزرار النيون -->
+    {% if "youtube.com" in movie.watch_link or "youtu.be" in movie.watch_link %}
+        <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px rgba(255,0,127,0.4);">
+            <iframe src="{{ movie.watch_link }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen></iframe>
+        </div>
+    {% else %}
+        <div style="padding: 40px 20px; background: rgba(15, 15, 15, 0.95); border-radius: 20px; border: 1px solid rgba(255,0,127,0.4); box-shadow: inset 0 0 15px rgba(0,0,0,0.9);">
+            <h3 style="color: #fff; margin-bottom: 15px; font-size: 20px;">🎬 الفيلم جاهز للمشاهدة الفورية</h3>
+            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">اضغط على الزر أدناه لبدء التشغيل بجودة عالية من السيرفر الخاص.</p>
+
+            <a href="{{ movie.watch_link }}" target="_blank" class="btn-neon" style="display: inline-block; padding: 15px 40px; background: linear-gradient(45deg, #ff007f, #7f00ff); color: #fff; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); transition: 0.3s;">
+                ▶️ تشغيل / تحميل الفيلم الآن
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
